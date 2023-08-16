@@ -1,17 +1,21 @@
+#include "main.h"
 #include <unistd.h>
 
-int _putchar(char c) {
-    return write(1, &c, 1);
+/**
+ * print_alphabet - Entry point
+ * Return:0
+ */
+
+void print_alphabet(void)
+{
+char c = 'a';
+
+while (c <= 'z')
+{
+_putchar(c);
+c++;
+
 }
+_putchar('\n');
 
-void print_alphabet(void) {
-    char letter = 'a';
-
-    while (letter <= 'z') {
-        _putchar(letter);
-        letter++;
-    }
-
-    _putchar('\n');
 }
-
