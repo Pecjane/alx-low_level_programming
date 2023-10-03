@@ -1,11 +1,9 @@
 #include "main.h"
-#include <stdlib.h>
 /**
- * read_textfile- name of the function written
- * @filename: function of the name of the text file to be read
- * @letters: rep numbers of letters to be read
- * Return: actual number of bytes read and printed
- *        0 when function fails or filename is NULL.
+ * read_textfile- name of the function written.
+ * @filename: function of the name function to read
+ * @letters: rep numbers of letters to be  read
+ * Return: 0
  */
 ssize_t read_textfile(const char *filename, size_t letters)
 {
