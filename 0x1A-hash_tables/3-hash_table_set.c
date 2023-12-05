@@ -1,54 +1,73 @@
 #include "hash_tables.h"
 
 /**
- * hash_table_set - element in a hash table.
- * @ht: A pointer to the hash 
- * @key: The key to add - cannot be an empty string.
- * @value: The value associated with key.
- *
- * Return: Upon failure - 0.
- *         Otherwise - 1.
+ * hash_table_set -  adds an element to the hash table.
+ * @ht: hash table you want to add or update the key/value to.
+ * @key: the key and cannot be an empty string.
+ * @value: the value associated with the key.
+ * Return: 1 if it succeeded, 0 otherwise
  */
 
 int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 {
-	hash_node_t *new;
-	char *value_copy;
-	unsigned long int index, i;
+	unsigned long int index;
+	hash_node_t *item_ptr;
+	hash_node_t *new_item;
 
-	if (ht == NULL || key == NULL || *key == '\0' || value == NULL)
+	if (!ht)
 		return (0);
 
-	value_copy = strdup(value);
-	if (value_copy == NULL)
+	if (!key || strcmp(key, "") == 0)
 		return (0);
 
 	index = key_index((const unsigned char *)key, ht->size);
-	for (i = index; ht->array[i]; i++)
+	new_item = create_item(key, value);
+
+	if (!new_item)
+		return (0);
+
+	item_ptr = ht->array[index];
+
+	if (!item_ptr)
 	{
-		if (strcmp(ht->array[i]->key, key) == 0)
-		{
-			free(ht->array[i]->value);
-			ht->array[i]->value = value_copy;
-			return (1);
-		}
+		ht->array[index] = new_item;
+		return (1);
 	}
 
-	new = malloc(sizeof(hash_node_t));
-	if (new == NULL)
+	if (strcmp(item_ptr->key, key) == 0)
 	{
-		free(value_copy);
-		return (0);
+		strcpy(item_ptr->value, value);
+		return (1);
 	}
-	new->key = strdup(key);
-	if (new->key == NULL)
+	else
 	{
-		free(new);
-		return (0);
+		ht->array[index] = new_item;
+		new_item->next = item_ptr;
+		return (1);
 	}
-	new->value = value_copy;
-	new->next = ht->array[index];
-	ht->array[index] = new;
 
 	return (1);
+}
+
+/**
+ * create_item - creates a hash_node_t item.
+ * @key: the key.
+ * @value: the value associated with the key.
+ * Return: the pointer to the item.
+ */
+
+hash_node_t *create_item(const char *key, const char *value)
+{
+	hash_node_t *item = malloc(sizeof(hash_node_t));
+
+	if (!item)
+		return (NULL);
+
+	item->key = malloc(strlen(key) + 1);
+	item->value = malloc(strlen(value) + 1);
+	strcpy(item->key, key);
+	strcpy(item->value, value);
+	item->next = NULL;
+
+	return (item);
 }
