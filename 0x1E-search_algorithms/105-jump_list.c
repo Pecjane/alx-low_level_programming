@@ -8,42 +8,38 @@
  * @value: The value to search for.
  *
  * Return: If the value is not present or the head of the list is NULL, NULL.
- *         Otherwise, a pointer to the first node where the value is located.
+ *         else, a pointer to the first node where the value is located.
  *
  * Description: Prints a value every time it is compared in the list.
  *              Uses the square root of the list size as the jump step.
  */
 listint_t *jump_list(listint_t *list, size_t size, int value)
 {
-	size_t jump_step, step_size;
-	listint_t *current, *next_jump;
+	size_t step, step_size;
+	listint_t *node, *jump;
 
 	if (list == NULL || size == 0)
 		return (NULL);
 
-	jump_step = 0;
+	step = 0;
 	step_size = sqrt(size);
-	for (current = next_jump = list; next_jump->index + 1
-			< size && next_jump->n < value;)
+	for (node = jump = list; jump->index + 1 < size && jump->n < value;)
 	{
-		current = next_jump;
-		for (jump_step += step_size; next_jump->index <
-				jump_step; next_jump = next_jump->next)
+		node = jump;
+		for (step += step_size; jump->index < step; jump = jump->next)
 		{
-			if (next_jump->index + 1 == size)
+			if (jump->index + 1 == size)
 				break;
 		}
-		printf("Value checked at index [%ld] = [%d]\n",
-				next_jump->index, next_jump->n);
+		printf("Value checked at index [%ld] = [%d]\n", jump->index, jump->n);
 	}
 
 	printf("Value found between indexes [%ld] and [%ld]\n",
-			current->index, next_jump->index);
+			node->index, jump->index);
 
-	for (; current->index < next_jump->index && current->n <
-			value; current = current->next)
-		printf("Value checked at index [%ld] = [%d]\n", current->index, current->n);
-	printf("Value checked at index [%ld] = [%d]\n", current->index, current->n);
+	for (; node->index < jump->index && node->n < value; node = node->next)
+		printf("Value checked at index [%ld] = [%d]\n", node->index, node->n);
+	printf("Value checked at index [%ld] = [%d]\n", node->index, node->n);
 
-	return (current->n == value ? current : NULL);
+	return (node->n == value ? node : NULL);
 }
